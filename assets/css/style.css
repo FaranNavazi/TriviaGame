@@ -5,12 +5,30 @@ body {
   background-image: url(../images/stock-vector-rock-n-roll-elements-grunge-style-seamless-pattern-endless-s-style-pop-culture-background-747909985.jpg);
 }
 
-div.box{
+div.container{
     background-color: white;
     color: black;
     width: 960px;
+    height: 540px;
     margin: auto;
 }
 header{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+footer{
+  vertical-align: text-bottom;
+  text-align: center;
+  color: white;
+  font: bolder;
+  font-size: 20px;
+}
+
+div.first{
+  text-align: center;
+}
+
+h1.title{
+  padding-top: 30px;
 }

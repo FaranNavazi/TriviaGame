@@ -98,9 +98,39 @@ $(document).ready(function(){
     var wins = 0;
     var losses = 0;
 
-    
+    $('#start').click(start);
+    $('#restart').click(start)
+    $('#questions-panel').css('display', 'none');
+    $('#results-panel').css('display', 'none')
 
 
+    function start() {
+        number = 60;
+        qCount = 0;
+        wins = 0;
+        losses = 0;
 
+        $('#choices').empty();
+        $('#start-panel').css('display', 'none');
+        $('#questions-panle').css('display', 'inherit');
+        $('#results-panel').css('display', 'none');
+
+        showQuestion(qCount);
+        timer();
+    }
+
+    function showQuestion() {
+        var questionObj = bank[qCount];
+        $('#question').html(questionObj.question);
+
+        for (var i = 0; i < questionObj.answers.length; i++) {
+           $('#choices').append(questionObj.answers[i]);
+        }
+        check();
+    }
+
+    function check() {
+        
+    }
 
 })
