@@ -1,0 +1,16 @@
+.time-counter {
+}
+
+body {
+  background-image: url(../images/stock-vector-rock-n-roll-elements-grunge-style-seamless-pattern-endless-s-style-pop-culture-background-747909985.jpg);
+}
+
+div.box{
+    background-color: white;
+    color: black;
+    width: 960px;
+    margin: auto;
+}
+header{
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
