@@ -1,136 +1,151 @@
-$(document).ready(function(){
-    var question1 = {
+$(document).ready(function () {
+    // ----------------------------TRIVIA GAME----------------------------
+
+    var correctAnswers = 0;
+    var incorrectAnswers = 0;
+    var unansweredQuestions = 0;
+    var timeRemaining = 45;
+    var intervalID;
+    var indexQandA = 0; //index to load a different question each round without the game reset or screen refresh
+    var answered = false; //variable to stop the timer if user has clicked an answer
+    var correct;
+    var triviaGame = [{
         question: "Who is the lead singer of Metallica?",
-        answers:[
-            "<div class='choices btn btn-primary'> Chester Bennington </div><br>",
-            "<div class='choices btn btn-primary'> Kurt Cobain </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> James Hetfield </div><br>",
-            "<div class='choices btn btn-primary'> Steven Tyler </div><br>",
-        ]
-    };
-    var question2 = {
+        answer: ["Chester Bennington", "Kurt Cobain", "James Hetfield", "Steven Tyler"],
+        correct: "2"
+    }, {
         question: "What year the song 'Smell like teen spirit' was released?",
-        answers:[
-            "<div class='choices btn btn-primary' data-correct='true'> 1991 </div><br>",
-            "<div class='choices btn btn-primary'> 1995 </div><br>",
-            "<div class='choices btn btn-primary'> 1998 </div><br>",
-            "<div class='choices btn btn-primary'> 1993 </div><br>",
-        ]
-    };
-    var question3 = {
-        question: "The song 'Zombie' in year 1993 was released by: ",
-        answers:[
-            "<div class='choices btn btn-primary'> Korn </div><br>",
-            "<div class='choices btn btn-primary'> Rob Zombie </div><br>",
-            "<div class='choices btn btn-primary'> Pearl Jam </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> The Cranberries </div><br>",
-        ]
-    };
-    var question4 = {
+        answer: ["1991", "1995", "1998", "1993"],
+        correct: "0",
+    }, {
+        question: "The song 'Zombie' in year 1993 was released by:",
+        answer: ["Korn", "Rob Zombie", "Pearl Jam", "The Cranberries"],
+        correct: "3"
+    }, {
         question: "Who is the lead singer of Korn?",
-        answers:[
-            "<div class='choices btn btn-primary'> Anajil Roberts </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> Jonathan Davis </div><br>",
-            "<div class='choices btn btn-primary'> Corey Taylor </div><br>",
-            "<div class='choices btn btn-primary'> Jonathan Davidson </div><br>",
-        ]
-    };
-    var question5 = {
+        answer: ["Anajil Roberts", "Jonathan Davis", "Corey Taylor", "Jonathan Davidson"],
+        correct: "1"
+    }, {
         question: "Which one is Nirvana's best selling album?",
-        answers:[
-            "<div class='choices btn btn-primary'> Blew </div><br>",
-            "<div class='choices btn btn-primary'> Silver </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> Nevermind </div><br>",
-            "<div class='choices btn btn-primary'> In Utero </div><br>",
-        ]
-    };
-    var question6 = {
+        answer: ["Blew", "Silver", "Nevermind", "In Utero"],
+        correct: "2"
+    }, {
         question: "Who is the lead singer of Tool?",
-        answers:[
-            "<div class='choices btn btn-primary' data-correct='true'> Maynard Keenan </div><br>",
-            "<div class='choices btn btn-primary'> Adam Jones </div><br>",
-            "<div class='choices btn btn-primary'> Danny Carey </div><br>",
-            "<div class='choices btn btn-primary'> Billy Howerdel </div><br>",
-        ]
-    };
-    var question7 = {
+        answer: ["Maynard Keenan", "Adam Jones", "Danny Carey", "Billy Howerdel"],
+        correct: "0"
+    }, {
         question: "Song 'The Diary of Jane' blongs to which band?",
-        answers:[
-            "<div class='choices btn btn-primary'> Seether </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> Breaking Benjamin </div><br>",
-            "<div class='choices btn btn-primary'> Sevendust </div><br>",
-            "<div class='choices btn btn-primary'> Trapt </div><br>",
-        ]
-    };
-    var question8 = {
+        answer: ["Seether", "Breaking Benjamin", "Sevendust", "Trapt"],
+        correct: "1"
+    }, {
         question: "what year Kurt Cobain commited suicied?",
-        answers:[
-            "<div class='choices btn btn-primary'> 1999 </div><br>",
-            "<div class='choices btn btn-primary'> 2000 </div><br>",
-            "<div class='choices btn btn-primary'> 1991 </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> 1994 </div><br>",
-        ]
-    };
-    var question9 = {
-        question: "What year the band Tool was formed?",
-        answers:[
-            "<div class='choices btn btn-primary'> 1997 </div><br>",
-            "<div class='choices btn btn-primary'> 1994 </div><br>",
-            "<div class='choices btn btn-primary' data-correct='true'> 1990 </div><br>",
-            "<div class='choices btn btn-primary'> 1995 </div><br>",
-        ]
-    };
-    var question10 = {
-        question: "The song '1979', released in 1995, blongs to what band?",
-        answers:[
-            "<div class='choices btn btn-primary' data-correct='true'> The Smashing Pumpkins </div><br>",
-            "<div class='choices btn btn-primary'> nonehead </div><br>",
-            "<div class='choices btn btn-primary'> Arcade Fire </div><br>",
-            "<div class='choices btn btn-primary'> Coldplay </div><br>",
-        ]
-    };
+        answer: ["1991", "2000", "1991", "1994"],
+        correct: "3"
+    }];
+    // ------------- FUNCTION DECLARATIONS ----------------------------
 
 
-    var bank = [question1,question2,question3,question4,question5,question6,question7,question8,question9,question10];
-    var number = 60;
-    var intervalId;
-    var qCount = 0;
-    var wins = 0;
-    var losses = 0;
-
-    $('#start').click(start);
-    $('#restart').click(start)
-    $('#questions-panel').css('display', 'none');
-    $('#results-panel').css('display', 'none')
-
-
-    function start() {
-        number = 60;
-        qCount = 0;
-        wins = 0;
-        losses = 0;
-
-        $('#choices').empty();
-        $('#start-panel').css('display', 'none');
-        $('#questions-panle').css('display', 'inherit');
-        $('#results-panel').css('display', 'none');
-
-        showQuestion(qCount);
-        //timer();
+    function startGame() {
+        $('.start-button').remove();
+        correctAnswers = 0;
+        incorrectAnswers = 0;
+        unansweredQuestions = 0;
+        loadQandA();
     }
 
-    function showQuestion() {
-        var questionObj = bank[qCount];
-        $('#question').html(questionObj.question);
-
-        for (var i = 0; i < questionObj.answers.length; i++) {
-           $('#choices').append(questionObj.answers[i]);
+    function loadQandA() {
+        answered = false; // will allow timeRemaining to be pushed back to <h5> after round reset....else statement in function timer()
+        timeRemaining = 45;
+        intervalID = setInterval(timer, 1000);
+        if (answered === false) {
+            timer();
         }
-        check();
+        correct = triviaGame[indexQandA].correct;
+        var question = triviaGame[indexQandA].question;
+        $('.question').html(question);
+        for (var i = 0; i < 4; i++) {
+            var answer = triviaGame[indexQandA].answer[i];
+            $('.answers').append('<h4 class= answersAll id=' + i + '>' + answer + '</h4>');
+        }
+
+        $("h4").click(function () {
+            var id = $(this).attr('id');
+            if (id === correct) {
+                answered = true; // stops the timer
+                $('.question').text("THE ANSWER IS: " + triviaGame[indexQandA].answer[correct]);
+                correctAnswer();
+            } else {
+                answered = true; //stops the timer
+                $('.question').text("YOU CHOSE: " + triviaGame[indexQandA].answer[id] + ".....BUT THE ANSWER IS: " + triviaGame[indexQandA].answer[correct]);
+                incorrectAnswer();
+            }
+        });
     }
 
-    function check() {
-        
+    function timer() {
+        if (timeRemaining === 0) {
+            answered = true;
+            clearInterval(intervalID);
+            $('.question').text("THE CORRECT ANSWER IS: " + triviaGame[indexQandA].answer[correct]);
+            unAnswered();
+        } else if (answered === true) {
+            clearInterval(intervalID);
+        } else {
+            timeRemaining--;
+            $('.timeRemaining').text('YOU HAVE ' + timeRemaining + ' SECONDS TO CHOOSE');
+        }
     }
 
-})
+    function correctAnswer() {
+        correctAnswers++;
+        $('.timeRemaining').text("YOU HAVE ANSWERED CORRECTLY!").css({
+            'color': '#3D414F'
+        });
+        resetRound();
+    }
+
+    function incorrectAnswer() {
+        incorrectAnswers++;
+        $('.timeRemaining').text("YOU HAVE ANSWERED INCORRECTLY!").css({
+            'color': '#3D414F'
+        });
+        resetRound();
+
+    }
+
+    function unAnswered() {
+        unansweredQuestions++;
+        $('.timeRemaining').text("YOU FAILED TO CHOOSE AN ANSWER").css({
+            'color': '#3D414F'
+        });
+        resetRound();
+    }
+
+    function resetRound() {
+        $('.answersAll').remove();
+        indexQandA++; // increments index which will load next question when loadQandA() is called again
+        if (indexQandA < triviaGame.length) {
+            setTimeout(function () {
+                loadQandA();
+            }, 5000); // removes answer image from previous round
+        } else {
+            setTimeout(function () {
+                $('.question').remove();
+                $('.timeRemaining').remove();
+                $('.answers').append('<h4 class= answersAll end>CORRECT ANSWERS: ' + correctAnswers + '</h4>');
+                $('.answers').append('<h4 class= answersAll end>INCORRECT ANSWERS: ' + incorrectAnswers + '</h4>');
+                $('.answers').append('<h4 class= answersAll end>UNANSWERED QUESTIONS: ' + unansweredQuestions + '</h4>');
+                setTimeout(function () {
+                    location.reload();
+                }, 7000);
+            }, 5000);
+        }
+    };
+
+    $('.startButton').on("click", function () {
+        $('.startButton');
+        startGame();
+
+    });
+
+});
